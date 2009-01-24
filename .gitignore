@@ -1,0 +1,14 @@
+.svn
+out
+test/reports
+docs/api
+docs/gapi
+webapp/plugins
+*.zip
+*.iws
+.settings
+.project
+.classpath
+*.launch
+*.tmproj
+stacktrace.log

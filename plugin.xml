@@ -1,0 +1,13 @@
+<plugin name='fckeditor' version='0.8.1'>
+  <author>Stefano Gualdi</author>
+  <authorEmail>stefano.gualdi@gmail.com</authorEmail>
+  <title>Grails plugin for using FCKeditor rich editing features in a Grails application</title>
+  <description>Grails plugin for using FCKeditor rich editing features in a Grails application</description>
+  <documentation>http://grails.org/FCKeditor+plugin</documentation>
+  <resources>
+    <resource>FckeditorTagLib</resource>
+    <resource>FckeditorUrlMappings</resource>
+    <resource>FckeditorController</resource>
+  </resources>
+  <dependencies />
+</plugin>
