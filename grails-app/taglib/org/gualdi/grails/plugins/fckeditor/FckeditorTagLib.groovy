@@ -1,3 +1,5 @@
+package org.gualdi.grails.plugins.fckeditor
+
 import org.gualdi.grails.plugins.fckeditor.Fckeditor
 
 /**

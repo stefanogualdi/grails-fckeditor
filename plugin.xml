@@ -5,9 +5,9 @@
   <description>Grails plugin for using FCKeditor rich editing features in a Grails application</description>
   <documentation>http://grails.org/FCKeditor+plugin</documentation>
   <resources>
-    <resource>FckeditorTagLib</resource>
+    <resource>org.gualdi.grails.plugins.fckeditor.FckeditorTagLib</resource>
     <resource>FckeditorUrlMappings</resource>
-    <resource>FckeditorController</resource>
+    <resource>org.gualdi.grails.plugins.fckeditor.FckeditorController</resource>
   </resources>
   <dependencies />
 </plugin>

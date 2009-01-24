@@ -1,3 +1,5 @@
+package org.gualdi.grails.plugins.fckeditor
+
 import org.gualdi.grails.plugins.fckeditor.Fckeditor
 
 /**
@@ -18,18 +20,29 @@ class FckeditorController {
 
     	def baseDir = config.upload.basedir ?: Fckeditor.DEFAULT_BASEDIR
     			
-    	if (!baseDir.startsWith('/')) {
-    		baseDir = "/" + baseDir
-    	}
     	if (!baseDir.endsWith('/')) {
     		baseDir = baseDir + "/"
     	}
 
 		def type = params.Type
 
-		def currentPath = "${baseDir}${type}${currentFolder}"
-		def currentUrl = "${request.contextPath}${currentPath}"
-		def realPath = servletContext.getRealPath(currentPath)
+		def currentDir = "${type}${currentFolder}"
+		def currentUrl
+		def realPath
+
+		if (baseDir.startsWith('/')) {
+			def webDir = config.upload.webdir ?: Fckeditor.DEFAULT_BASEDIR
+			if (!webDir.endsWith('/')) {
+				webDir = webDir + "/"
+			}
+			currentUrl = "${webDir}${currentDir}"
+			realPath = "${baseDir}${currentDir}"
+		}
+		else {
+			def currentPath = "/${baseDir}${currentDir}"
+			currentUrl = "${request.contextPath}${currentPath}"
+			realPath = servletContext.getRealPath(currentPath)
+		}
 
     	def finalDir = new File(realPath)
     	if (!finalDir.exists()) {
