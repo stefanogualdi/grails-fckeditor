@@ -11,4 +11,5 @@ webapp/plugins
 .classpath
 *.launch
 *.tmproj
+plugin.xml
 stacktrace.log
