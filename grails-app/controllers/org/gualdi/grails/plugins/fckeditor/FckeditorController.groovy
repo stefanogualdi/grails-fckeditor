@@ -8,47 +8,58 @@ import org.gualdi.grails.plugins.fckeditor.Fckeditor
 class FckeditorController {
 
 	def connector = {
-		execute(params.Command, params.CurrentFolder)
+		execute(params.Command, params.CurrentFolder, params.userSpace)
 	}
 
 	def uploader = {
-		execute('FileUpload', '/', true)
+		execute('FileUpload', '/', params.userSpace, true)
 	}
 
-    private execute(command, currentFolder, uploadOnly = false) {
+    private execute(command, currentFolder, userSpace, uploadOnly = false) {
 		def config = grailsApplication.config.fckeditor
 
     	def baseDir = config.upload.basedir ?: Fckeditor.DEFAULT_BASEDIR
-    			
+    	if (!baseDir.startsWith('/')) {
+    		baseDir = "/" + baseDir
+    	}
     	if (!baseDir.endsWith('/')) {
     		baseDir = baseDir + "/"
     	}
 
+        // Use a directory outside of the application
+        def baseUrl = config.upload.baseurl ?: config.upload.basedir
+        if (!baseUrl.endsWith('/')) {
+            baseUrl = baseUrl + "/"
+        }
+
+        // FIXME: sanitizePath() must be revised 
+        def spaceDir = sanitizePath(userSpace)
+        if (spaceDir.startsWith('/')) {
+            spaceDir = spaceDir.substring(1)
+        }
+        if (!spaceDir.endsWith('/')) {
+            spaceDir = spaceDir + "/"
+        }
+
 		def type = params.Type
-
-		def currentDir = "${type}${currentFolder}"
-		def currentUrl
+		def currentPath = "${baseDir}${spaceDir}${type}${currentFolder}"
+		def currentUrl = "${request.contextPath}${currentPath}"
 		def realPath
-
-		if (baseDir.startsWith('/')) {
-			def webDir = config.upload.webdir ?: Fckeditor.DEFAULT_BASEDIR
-			if (!webDir.endsWith('/')) {
-				webDir = webDir + "/"
-			}
-			currentUrl = "${webDir}${currentDir}"
-			realPath = "${baseDir}${currentDir}"
-		}
-		else {
-			def currentPath = "/${baseDir}${currentDir}"
-			currentUrl = "${request.contextPath}${currentPath}"
-			realPath = servletContext.getRealPath(currentPath)
-		}
+        
+        if (config.upload.baseurl) {
+            realPath = currentPath;
+            currentUrl = "${baseUrl}${type}${currentFolder}"
+        }
+        else {
+            realPath = servletContext.getRealPath(currentPath)
+        }
 
     	def finalDir = new File(realPath)
     	if (!finalDir.exists()) {
 			finalDir.mkdirs()
     	}
 
+        log.debug("userSpace = ${userSpace}")
     	log.debug("Command = ${command}")
     	log.debug("CurrentFolder = ${currentFolder}")
     	log.debug("Type = ${type}")
@@ -93,7 +104,7 @@ class FckeditorController {
 				break
 			case 'CreateFolder':
 				def newFolderName = params.NewFolderName
-				def newFinalDir = new File( finalDir, newFolderName )
+				def newFinalDir = new File(finalDir, newFolderName)
 				errorNo = Fckeditor.ERROR_NOERROR
 
 				if (newFinalDir.exists()) {
@@ -101,7 +112,7 @@ class FckeditorController {
 				}
 				else {
 					try {
-						if( newFinalDir.mkdir() ) {
+						if (newFinalDir.mkdir()) {
 							errorNo = Fckeditor.ERROR_NOERROR
 						}
 						else {
@@ -191,8 +202,8 @@ class FckeditorController {
             case 'RenameFile':
                 def oldName = params.FileName
                 def newName = params.NewName
-				def oldFinalName = new File( finalDir, oldName )
-				def newFinalName = new File( finalDir, newName )
+				def oldFinalName = new File(finalDir, oldName)
+				def newFinalName = new File(finalDir, newName)
 
                 errorNo = Fckeditor.ERROR_NOERROR
                 if (!newFinalName.exists() && isFileAllowed(newName, type)) {
@@ -223,13 +234,13 @@ class FckeditorController {
             case 'RenameFolder':
                 def oldName = params.FolderName
                 def newName = params.NewName
-                def oldFinalName = new File( finalDir, oldName )
-                def newFinalName = new File( finalDir, newName )
+                def oldFinalName = new File(finalDir, oldName)
+                def newFinalName = new File(finalDir, newName)
 
                 errorNo = Fckeditor.ERROR_NOERROR
                 if (!newFinalName.exists()) {
                     try {
-                        if( oldFinalName.renameTo( newFinalName ) ) {
+                        if (oldFinalName.renameTo(newFinalName)) {
                             errorNo = Fckeditor.ERROR_NOERROR
                         }
                         else {
@@ -273,19 +284,19 @@ class FckeditorController {
 							errorNo = Fckeditor.ERROR_NOERROR
 							newName = file.originalFilename
 
-                            def f = splitFilename( newName )
+                            def f = splitFilename(newName)
 							if (isAllowed(f.ext, type)) {
-                                def fileToSave = new File( finalDir, newName )
+                                def fileToSave = new File(finalDir, newName)
 								if ( !overwrite ) {
 									def idx = 1
-									while ( fileToSave.exists() ) {
+									while (fileToSave.exists()) {
 										errorNo = Fckeditor.ERROR_FILE_RENAMED
 										newName = "${f.name}(${idx}).${f.ext}"
 										fileToSave = new File( finalDir, newName )
 										idx++
 									}
 								}
-								file.transferTo( fileToSave )
+								file.transferTo(fileToSave)
 							}
 							else {
 								errorNo = Fckeditor.ERROR_INVALID_FILE_TYPE
@@ -301,11 +312,11 @@ class FckeditorController {
 
 				response.setHeader("Cache-Control", "no-cache")
 				render(contentType: "text/html", encoding: "UTF-8") {
-					if( uploadOnly ) {
-						script( type: "text/javascript", "window.parent.OnUploadCompleted(${errorNo}, '${currentUrl}${newName}', '${newName}', '${errorMsg}');")
+					if (uploadOnly) {
+						script(type: "text/javascript", "window.parent.OnUploadCompleted(${errorNo}, '${currentUrl}${newName}', '${newName}', '${errorMsg}');")
 					}
 					else {
-						script( type: "text/javascript", "window.parent.frames['frmUpload'].OnUploadCompleted(${errorNo}, '${newName}');")
+						script(type: "text/javascript", "window.parent.frames['frmUpload'].OnUploadCompleted(${errorNo}, '${newName}');")
 					}
 				}
 				break
@@ -347,5 +358,13 @@ class FckeditorController {
     private splitFilename(fileName) {
     	def idx = fileName.lastIndexOf(".")
     	return  [name: fileName[0..idx - 1], ext: fileName[idx + 1..-1]]
+    }
+
+    private sanitizePath(path) {
+        def result = ""
+        if (path) {
+            result = path.replaceAll("\\.|\\/|\\/|\\||:|\\?|\\*|\"|<|>|\\p{Cntrl}", "")
+        }
+        return result
     }
 }

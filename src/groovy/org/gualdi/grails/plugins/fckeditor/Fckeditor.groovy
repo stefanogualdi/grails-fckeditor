@@ -10,6 +10,7 @@ import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 class Fckeditor {
 	static final DEFAULT_BASEDIR = "/uploads/"
 	static final DEFAULT_FILEBROWSER = "default"
+	static final DEFAULT_USERSPACE = ""
 	static final DEFAULT_INSTANCENAME = "editor"
 	static final DEFAULT_TOOLBAR = "Default"
 	static final DEFAULT_WIDTH = "100%"
@@ -43,13 +44,15 @@ class Fckeditor {
 	                                    (BrowserDetector.SAFARI): 3.0,
 	                                    (BrowserDetector.OPERA): 9.5,
 	                                    (BrowserDetector.NETSCAPE): 7.1,
-	                                    (BrowserDetector.CAMINO): 1.0
+	                                    (BrowserDetector.CAMINO): 1.0,
+                                        (BrowserDetector.CHROME): 0.2
 	                                    ]
 	
 	def contextPath
 	def basePath
 	def instanceName
 	def fileBrowser
+    def userSpace
 	def toolbar
 	def width
 	def height
@@ -59,7 +62,7 @@ class Fckeditor {
 
 	def request
 
-	Fckeditor( request, attrs ) {
+	Fckeditor(request, attrs) {
 		def config = ConfigurationHolder.config.fckeditor
 
 		this.request = request
@@ -69,14 +72,15 @@ class Fckeditor {
 		// Base configuration
 		instanceName = attrs.name ? attrs.remove('name') : DEFAULT_INSTANCENAME
 		fileBrowser = attrs.fileBrowser ? attrs.remove('fileBrowser') : DEFAULT_FILEBROWSER
-		toolbar = attrs.toolbar ? attrs.remove('toolbar') : DEFAULT_TOOLBAR
+		userSpace = attrs.userSpace ? attrs.remove('userSpace') : DEFAULT_USERSPACE
+        toolbar = attrs.toolbar ? attrs.remove('toolbar') : DEFAULT_TOOLBAR
 		width = attrs.width ? attrs.remove('width') : DEFAULT_WIDTH
 		height = attrs.height ? attrs.remove('height') : DEFAULT_HEIGHT
 
 		// Dynamically create connector configuration
 		def tempConfig = [:]
 
-		def resources = ['Image', 'Link', 'Flash', 'Media']
+		def resources = FckeditorConfig.RESOURCE_TYPES
 
 		resources.each { type ->
 			// Filemanager url and connector
@@ -85,7 +89,7 @@ class Fckeditor {
 			if ( type != 'Link') {
 				typeStr = "Type=${type}&"
 			}
-            def value = "${basePath}/js/fckeditor/editor/filemanager/browser/${fileBrowser}/browser.html?${typeStr}Connector=${contextPath}/fckconnector"
+            def value = "${basePath}/js/fckeditor/editor/filemanager/browser/${fileBrowser}/browser.html?${typeStr}Connector=${contextPath}/fckconnector?userSpace=${userSpace}"
 			tempConfig[key] = value
 
 			// File Browser is enabled?
@@ -96,7 +100,7 @@ class Fckeditor {
 
 		resources.each { type ->
 			def key = "${type}UploadURL"
-			def value = "${contextPath}/fckuploader?Type=${type == 'Link' ? 'File' : type}"
+			def value = "${contextPath}/fckuploader?Type=${type == 'Link' ? 'File' : type}&userSpace=${userSpace}"
 			tempConfig[key] = value
 
 			// Upload tab is enabled?
@@ -119,10 +123,16 @@ class Fckeditor {
 			}
 		}
 
+        // Check if extra config is present
+        def extraCfg = new FckeditorConfig(request).config
+        if (extraCfg) {
+            tempConfig += extraCfg
+        }
+
 		configField = tempConfig.collect { key, value -> "${key}=${encodeConfig(value)}" }.join('&')
 	}
 
-	def create() {
+	def createEditor() {
 		def compatibleHtml = """
 		<div>
 			<input type="hidden" id="${instanceName}" name="${instanceName}" value="${initialValue.encodeAsHTML()}"/>
@@ -137,7 +147,7 @@ class Fckeditor {
 		</div>
 		"""
 		
-		def userAgent=request.getHeader("user-agent")
+		def userAgent = request.getHeader("user-agent")
 		def bd = new BrowserDetector(userAgent)
 		
 		def result = standardHtml
@@ -147,6 +157,15 @@ class Fckeditor {
 
 		return result
 	}
+
+    def createFileBrowser(type, browser) {
+        def typeStr = ""
+        if ( type != 'Link') {
+            typeStr = "Type=${type}&"
+        }
+        def html = "${this.basePath}/js/fckeditor/editor/filemanager/browser/${browser}/browser.html?${typeStr}Connector=${this.contextPath}/fckconnector?userSpace=${userSpace}"
+        return html
+    }
 
 	private String encodeConfig(String txt) {
 		def result = txt
