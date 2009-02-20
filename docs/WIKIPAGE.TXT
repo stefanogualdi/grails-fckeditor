@@ -1,0 +1,144 @@
+h1. FCKeditor Plugin
+
+This plugin can be used to integrate rich web editing functionality in Grails applications.
+
+The plugin is written in Groovy/Grails without any dependencies on external libraries.
+
+The FCKeditor plugin is based on the great FCKeditor [http://www.fckeditor.net] Web Rich Text Editor.
+
+h2. Current version
+
+Current plugin version is *0.8*
+
+Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.3*
+
+h2. Installation
+
+The plugin can be installed with the following command:
+
+{code}
+grails install-plugin fckeditor
+{code}
+
+h2. Usage
+
+To use the wysiwyg editor in your page simply put the following code in your .gsp page:
+
+{code:html}
+<fckeditor:editor
+    name="text"
+    width="100%"
+    height="400"
+    toolbar="Standard"
+    fileBrowser="default">
+Initial text
+</fckeditor:editor>
+{code}
+
+where:
+
+{table}
+Attribute | Description
+*name* | Field name (default: "editor")
+*width* | Width of the editing space (default: "100%")
+*height* | Height of the editing space (default: "200")
+*toolbar* | Toolbar to use as defined in fckconfig.js (default: "Default")
+*fileBrowser* | Name of the file browser to use. Possible values are default or extended. The extended file browser supports deletion and rename of files and folders (default: "default")
+{table}
+
+h2. Configuration
+
+The plugin can be configured with the standard Config.groovy file.
+
+Actually are available the following options:
+
+{table}
+Config key|Default|Description
+*fckeditor.upload.basedir*|/uploads/|Base directory relative to webapp root
+*fckeditor.upload.overwrite*|false|Overwite files on upload
+*fckeditor.upload.link.browser*|false|Enable file browser for file objects
+*fckeditor.upload.link.upload*|false|Enable upload tab for file objects
+*fckeditor.upload.link.allowed*|\[ \]|Extensions allowed for file objects
+*fckeditor.upload.link.denied*|\[ \]| Extensions denied for file objects
+*fckeditor.upload.image.browser*|false| Enable file browser for image objects
+*fckeditor.upload.image.upload*|false|Enable upload tab for image objects
+*fckeditor.upload.image.allowed*|\[ \]|Extensions allowed for image objects
+*fckeditor.upload.image.denied*|\[ \]|Extensions denied for image objects
+*fckeditor.upload.flash.browser*|false|Enable file browser for flash objects
+*fckeditor.upload.flash.upload*|false|Enable upload tab for flash objects
+*fckeditor.upload.flash.allowed*|\[ \]|Extensions allowed for flash objects
+*fckeditor.upload.flash.denied*|\[ \]|Extensions denied for flash objects
+*fckeditor.upload.media.browser*|false|Enable file browser for media objects
+*fckeditor.upload.media.upload*|false|Enable upload tab for media objects
+*fckeditor.upload.media.allowed*|\[ \]|Extensions allowed for media objects
+*fckeditor.upload.media.denied*|\[ \]|Extensions denied for media objects
+{table}
+
+h2. Sample config
+
+{code}
+fckeditor {
+	upload {
+		basedir = "/uploads/"
+		overwrite = false
+		link {
+			browser = true
+			upload = false
+			allowed = []
+			denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5', 'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
+ 'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
+'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
+		}
+		image {
+			browser = true
+			upload = true
+			allowed = ['jpg', 'gif', 'jpeg', 'png']
+			denied = []
+		}
+		flash {
+			browser = false
+			upload = false
+			allowed = ['swf']
+			denied = []
+		}
+		media {
+			browser = false
+			upload = false
+			allowed = ['mpg','mpeg','avi','wmv','asf','mov']
+			denied = []
+		}
+	}
+}
+{code}
+
+{note}
+*Security note*
+
+For security reasons is important to define allowed/denied extensions.
+{note}
+
+h2. Version history
+
+h4. 0.8
+
+* Upgrade to FCKeditor version 2.6.3 final
+
+h4. 0.7
+
+* Upgrade to FCKeditor version 2.6.0 final
+
+h4. 0.6
+
+*  This version correct an installation problem on windows XP (and maybe on other platforms) due to a missing respect of plugins naming conventions. Many thanks to Markus Samuelsson that first pointed out the problem and to Brian Bonner who sent me a patch.
+* This version include a modified file browser with the support for delete/rename files and folders. To use it simple add fileBrowser="extended" to the editor tag attributes.
+* Added youtube FCKeditor plugin [http://sourceforge.net/projects/youtubepluginfo/]
+* Added embedmovies FCKeditor plugin [http://sourceforge.net/tracker/download.php?group_id=75348&atid=737639&file_id=182612&aid=1510783]
+* Added two toolbars ('Standard' and 'Multimedia', the last one with the above plugins included)
+
+h4. 0.5
+
+* First public release
+
+
+
+
