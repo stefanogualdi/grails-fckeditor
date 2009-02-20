@@ -363,6 +363,7 @@ class FckeditorController {
     private sanitizePath(path) {
         def result = ""
         if (path) {
+	    // remove the following chars: . \ / | : ? * " < > 'control chars'
             result = path.replaceAll("\\.|\\/|\\/|\\||:|\\?|\\*|\"|<|>|\\p{Cntrl}", "")
         }
         return result
