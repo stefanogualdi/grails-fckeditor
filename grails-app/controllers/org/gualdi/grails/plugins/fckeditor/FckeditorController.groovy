@@ -1,6 +1,7 @@
 package org.gualdi.grails.plugins.fckeditor
 
 import org.gualdi.grails.plugins.fckeditor.Fckeditor
+import org.gualdi.grails.utils.PathUtils
 
 /**
  * @author Stefano Gualdi
@@ -19,38 +20,24 @@ class FckeditorController {
 		def config = grailsApplication.config.fckeditor
 
     	def baseDir = config.upload.basedir ?: Fckeditor.DEFAULT_BASEDIR
-    	if (!baseDir.startsWith('/')) {
-    		baseDir = "/" + baseDir
-    	}
-    	if (!baseDir.endsWith('/')) {
-    		baseDir = baseDir + "/"
-    	}
+        baseDir = PathUtils.checkSlashes(baseDir, "L+ R+", true)
 
-        // Use a directory outside of the application
-        def baseUrl = config.upload.baseurl ?: config.upload.basedir
-        if (!baseUrl.endsWith('/')) {
-            baseUrl = baseUrl + "/"
-        }
-
-        // FIXME: sanitizePath() must be revised 
-        def spaceDir = sanitizePath(userSpace)
-        if (spaceDir.startsWith('/')) {
-            spaceDir = spaceDir.substring(1)
-        }
-        if (!spaceDir.endsWith('/')) {
-            spaceDir = spaceDir + "/"
-        }
+        def spaceDir = PathUtils.sanitizePath(userSpace)
+        spaceDir = PathUtils.checkSlashes(spaceDir, "L- R+", true)
 
 		def type = params.Type
 		def currentPath = "${baseDir}${spaceDir}${type}${currentFolder}"
-		def currentUrl = "${request.contextPath}${currentPath}"
+		def currentUrl
 		def realPath
         
+        // Use a directory outside of the application space?
         if (config.upload.baseurl) {
+            def baseUrl = PathUtils.checkSlashes(config.upload.baseurl, "R+", true)
+            currentUrl = "${baseUrl}${spaceDir}${type}${currentFolder}"
             realPath = currentPath;
-            currentUrl = "${baseUrl}${type}${currentFolder}"
         }
         else {
+            currentUrl = "${request.contextPath}${currentPath}"
             realPath = servletContext.getRealPath(currentPath)
         }
 
@@ -72,8 +59,8 @@ class FckeditorController {
 			case 'GetFolders':
 				response.setHeader("Cache-Control", "no-cache")
 				render(contentType: "text/xml", encoding: "UTF-8") {
-					Connector( command: command, resourceType: type) {
-						CurrentFolder( path: currentFolder, url: currentUrl )
+					Connector(command: command, resourceType: type) {
+						CurrentFolder(path: currentFolder, url: currentUrl)
 						Folders {
 							finalDir.eachDir {
 								Folder(name: it.name)
@@ -85,8 +72,8 @@ class FckeditorController {
 			case 'GetFoldersAndFiles':
 				response.setHeader("Cache-Control", "no-cache")
 				render(contentType: "text/xml", encoding: "UTF-8") {
-					Connector( command: command, resourceType: type) {
-						CurrentFolder( path: currentFolder, url: currentUrl )
+					Connector(command: command, resourceType: type) {
+						CurrentFolder(path: currentFolder, url: currentUrl)
 						Folders {
 							finalDir.eachDir {
 								Folder(name: it.name)
@@ -94,7 +81,7 @@ class FckeditorController {
 						}
 						Files {
 							finalDir.eachFile {
-								if ( !it.directory ) {
+								if (!it.directory) {
 									'File'(name: it.name, size: it.length() / 1024)
 								}
 							}
@@ -119,34 +106,34 @@ class FckeditorController {
 							errorNo = Fckeditor.ERROR_INVALID_FOLDER_NAME
 						}
 					}
-					catch(SecurityException se) {
+					catch (SecurityException se) {
 						errorNo = Fckeditor.ERROR_NO_CREATE_PERMISSIONS
 					}
 				}
 
 				response.setHeader("Cache-Control", "no-cache")
 				render(contentType: "text/xml", encoding: "UTF-8") {
-					Connector( command: command, resourceType: type) {
-						CurrentFolder( path: currentFolder, url: currentUrl )
-						'Error'( number: errorNo )
+					Connector(command: command, resourceType: type) {
+						CurrentFolder(path: currentFolder, url: currentUrl)
+						'Error'(number: errorNo)
 					}
 				}
 				break
 			case 'DeleteFile':
                 def fileName = params.FileName
-				def fileFinalName = new File( finalDir, fileName )
+				def fileFinalName = new File(finalDir, fileName)
 
                 errorNo = Fckeditor.ERROR_NOERROR
                 if (fileFinalName.exists()) {
                     try {
-						if( fileFinalName.delete() ) {
+						if (fileFinalName.delete()) {
 							errorNo = Fckeditor.ERROR_NOERROR
 						}
 						else {
 							errorNo = Fckeditor.ERROR_INVALID_FILE_NAME
 						}
 					}
-					catch(SecurityException se) {
+					catch (SecurityException se) {
 						errorNo = Fckeditor.ERROR_NO_CREATE_PERMISSIONS
 					}
                 }
@@ -156,15 +143,15 @@ class FckeditorController {
 
                 response.setHeader("Cache-Control", "no-cache")
 				render(contentType: "text/xml", encoding: "UTF-8") {
-					Connector( command: command, resourceType: type) {
-						CurrentFolder( path: currentFolder, url: currentUrl )
-						'Error'( number: errorNo )
+					Connector(command: command, resourceType: type) {
+						CurrentFolder(path: currentFolder, url: currentUrl)
+						'Error'(number: errorNo)
 					}
 				}
 			    break
             case 'DeleteFolder':
                 def folderName = params.FolderName
-                def folderFinalName = new File( finalDir, folderName )
+                def folderFinalName = new File(finalDir, folderName)
     
                 errorNo = Fckeditor.ERROR_NOERROR
                 if (folderFinalName.exists() && folderFinalName.isDirectory()) {
@@ -193,9 +180,9 @@ class FckeditorController {
 
                 response.setHeader("Cache-Control", "no-cache")
                 render(contentType: "text/xml", encoding: "UTF-8") {
-                    Connector( command: command, resourceType: type) {
-                        CurrentFolder( path: currentFolder, url: currentUrl )
-                        'Error'( number: errorNo )
+                    Connector(command: command, resourceType: type) {
+                        CurrentFolder(path: currentFolder, url: currentUrl)
+                        'Error'(number: errorNo)
                     }
                 }
                 break
@@ -215,7 +202,7 @@ class FckeditorController {
 							errorNo = Fckeditor.ERROR_INVALID_FILE_NAME
 						}
 					}
-					catch(SecurityException se) {
+					catch (SecurityException se) {
 						errorNo = Fckeditor.ERROR_NO_CREATE_PERMISSIONS
 					}
                 }
@@ -225,9 +212,9 @@ class FckeditorController {
 
                 response.setHeader("Cache-Control", "no-cache")
                 render(contentType: "text/xml", encoding: "UTF-8") {
-                    Connector( command: command, resourceType: type) {
-                        CurrentFolder( path: currentFolder, url: currentUrl )
-                        'Error'( number: errorNo )
+                    Connector(command: command, resourceType: type) {
+                        CurrentFolder(path: currentFolder, url: currentUrl)
+                        'Error'(number: errorNo)
                     }
                 }
                 break
@@ -247,7 +234,7 @@ class FckeditorController {
                             errorNo = Fckeditor.ERROR_INVALID_FOLDER_NAME
                         }
                     }
-                    catch(SecurityException se) {
+                    catch (SecurityException se) {
                         errorNo = Fckeditor.ERROR_NO_CREATE_PERMISSIONS
                     }
                 }
@@ -257,9 +244,9 @@ class FckeditorController {
             
                 response.setHeader("Cache-Control", "no-cache")
                 render(contentType: "text/xml", encoding: "UTF-8") {
-                    Connector( command: command, resourceType: type) {
-                        CurrentFolder( path: currentFolder, url: currentUrl )
-                        'Error'( number: errorNo )
+                    Connector(command: command, resourceType: type) {
+                        CurrentFolder(path: currentFolder, url: currentUrl)
+                        'Error'(number: errorNo)
                     }
                 }
                 break
@@ -284,7 +271,7 @@ class FckeditorController {
 							errorNo = Fckeditor.ERROR_NOERROR
 							newName = file.originalFilename
 
-                            def f = splitFilename(newName)
+                            def f = PathUtils.splitFilename(newName)
 							if (isAllowed(f.ext, type)) {
                                 def fileToSave = new File(finalDir, newName)
 								if ( !overwrite ) {
@@ -292,7 +279,7 @@ class FckeditorController {
 									while (fileToSave.exists()) {
 										errorNo = Fckeditor.ERROR_FILE_RENAMED
 										newName = "${f.name}(${idx}).${f.ext}"
-										fileToSave = new File( finalDir, newName )
+										fileToSave = new File(finalDir, newName)
 										idx++
 									}
 								}
@@ -339,7 +326,7 @@ class FckeditorController {
     }
 
     private isFileAllowed( filename, type ) {
-        def f = splitFilename(filename)
+        def f = PathUtils.splitFilename(filename)
         return isAllowed(f.ext, type) 
     }
     
@@ -352,20 +339,6 @@ class FckeditorController {
 		def allowed = config."${resourceType}".allowed ?: []
 		def denied = config."${resourceType}".denied ?: []
 
-		return ( ( fileExt in allowed || allowed.empty ) && !(fileExt in denied))
-    }
-
-    private splitFilename(fileName) {
-    	def idx = fileName.lastIndexOf(".")
-    	return  [name: fileName[0..idx - 1], ext: fileName[idx + 1..-1]]
-    }
-
-    private sanitizePath(path) {
-        def result = ""
-        if (path) {
-	    // remove the following chars: . \ / | : ? * " < > 'control chars'
-            result = path.replaceAll("\\.|\\/|\\/|\\||:|\\?|\\*|\"|<|>|\\p{Cntrl}", "")
-        }
-        return result
+		return ((fileExt in allowed || allowed.empty ) && !(fileExt in denied))
     }
 }
