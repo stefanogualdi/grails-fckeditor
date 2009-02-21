@@ -8,9 +8,9 @@ The FCKeditor plugin is based on the great FCKeditor [http://www.fckeditor.net] 
 
 h2. Current version
 
-Current plugin version is *0.8*
+Current plugin version is *0.9*
 
-Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.3*
+Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.4*
 
 h2. Installation
 
@@ -20,9 +20,44 @@ The plugin can be installed with the following command:
 grails install-plugin fckeditor
 {code}
 
-h2. Usage
+h2. Tags reference
 
-To use the wysiwyg editor in your page simply put the following code in your .gsp page:
+The plugin defines the following custom tags:
+
+{table}
+Tag | Description
+*config* | Configure the editor instance
+*editor* | Render the wysiwyg editor
+*fileBrowser* | Create a link to open just the file browser
+{table}
+
+h4. Tag config
+
+This tag give full access to every configuration option exposed by FCKeditor.
+
+{note}
+The config tag must precede the editor tag.
+{note}
+
+{code:html}
+<fckeditor:config OptionName="option_value"/>
+{code}
+
+Many options can be set in one time:
+
+{code:html}
+<fckeditor:config
+    OptionOne="option_one_value"
+    OptionTwo="option_two_value" />
+{code}
+
+Option names are case sentitive and must be written as indicated in the offical documentation.
+
+For a full reference of the available options please refer to the [offical documentation|http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options]
+
+h4. Tag editor
+
+This tag render the wysiwyg editor
 
 {code:html}
 <fckeditor:editor
@@ -35,7 +70,7 @@ Initial text
 </fckeditor:editor>
 {code}
 
-where:
+available attributes are:
 
 {table}
 Attribute | Description
@@ -44,7 +79,37 @@ Attribute | Description
 *height* | Height of the editing space (default: "200")
 *toolbar* | Toolbar to use as defined in fckconfig.js (default: "Default")
 *fileBrowser* | Name of the file browser to use. Possible values are default or extended. The extended file browser supports deletion and rename of files and folders (default: "default")
+*userSpace* | Name of the file user space to use for file browsing and uploads (default: "")
 {table}
+
+{note}
+For security reasons the *userSpace* attribute cannot contain any special character.
+All invalid characters will be replaced by "".
+{note}
+
+h4. Tag fileBrowser
+
+Create a link to open the file browser
+
+{code:html}
+<fckeditor:fileBrowser browser="default">Open file browser</fckeditor:fileBrowser>
+{code}
+
+available attributes are:
+
+{table}
+Attribute | Description
+*type* | Type of resource (default: "")
+*browser* | Name of the file browser to use. Possible values are default or extended. The extended file browser supports deletion and rename of files and folders (default: "default")
+*userSpace* | Name of the file user space to use for file browsing and uploads (default: "")
+*target* | Target attribute for the generated A tag (default: "")
+{table}
+
+if you just need the link to the file browser there is a *fileBrowserLink* tag:
+
+{code:html}
+<a href="${g.fileBrowserLink(type:'Image', browser:'extended')}">Open file browser</a>
+{code}
 
 h2. Configuration
 
@@ -54,7 +119,8 @@ Actually are available the following options:
 
 {table}
 Config key|Default|Description
-*fckeditor.upload.basedir*|/uploads/|Base directory relative to webapp root
+*fckeditor.upload.basedir*|/uploads/|Base directory relative to webapp root if baseurl not defined, otherwise the absolute path where to store the uploaded files
+*fckeditor.upload.baseurl*|none|The base URL to access the uploaded files
 *fckeditor.upload.overwrite*|false|Overwite files on upload
 *fckeditor.upload.link.browser*|false|Enable file browser for file objects
 *fckeditor.upload.link.upload*|false|Enable upload tab for file objects
@@ -79,7 +145,8 @@ h2. Sample config
 {code}
 fckeditor {
 	upload {
-		basedir = "/uploads/"
+		basedir = "/tmp/storagearea/"
+		baseurl = "/uploads/"
 		overwrite = false
 		link {
 			browser = true
@@ -119,7 +186,15 @@ For security reasons is important to define allowed/denied extensions.
 
 h2. Version history
 
-h4. 0.8
+h4. 0.9 (xx/02/2009)
+
+* Upgrade to FCKeditor version 2.6.4 final
+* Added the config tag
+* Added the fileBrowser tag
+* Added user space handling for file browsing and uploading
+* Added configuration setting for handling uploads outside the application context
+
+h4. 0.8 (26/08/2008)
 
 * Upgrade to FCKeditor version 2.6.3 final
 
@@ -129,7 +204,7 @@ h4. 0.7
 
 h4. 0.6
 
-*  This version correct an installation problem on windows XP (and maybe on other platforms) due to a missing respect of plugins naming conventions. Many thanks to Markus Samuelsson that first pointed out the problem and to Brian Bonner who sent me a patch.
+* This version correct an installation problem on windows XP (and maybe on other platforms) due to a missing respect of plugins naming conventions. Many thanks to Markus Samuelsson that first pointed out the problem and to Brian Bonner who sent me a patch.
 * This version include a modified file browser with the support for delete/rename files and folders. To use it simple add fileBrowser="extended" to the editor tag attributes.
 * Added youtube FCKeditor plugin [http://sourceforge.net/projects/youtubepluginfo/]
 * Added embedmovies FCKeditor plugin [http://sourceforge.net/tracker/download.php?group_id=75348&atid=737639&file_id=182612&aid=1510783]
@@ -139,6 +214,8 @@ h4. 0.5
 
 * First public release
 
+h2. Comments and bugs
 
+Please send any comment or suggestion to the author at stefano DOT gualdi AT gmail DOT com
 
-
+Issues or improvements can be signaled via JIRA ADDRESS ADDRESS
