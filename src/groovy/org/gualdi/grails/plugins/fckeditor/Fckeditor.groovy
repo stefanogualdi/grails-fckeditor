@@ -80,7 +80,7 @@ class Fckeditor {
 		// Dynamically create connector configuration
 		def tempConfig = [:]
 
-		def resources = FckeditorConfig.RESOURCE_TYPES
+		def resources = FckeditorConfig.getResourceTypes()
 
 		resources.each { type ->
 			// Filemanager url and connector
