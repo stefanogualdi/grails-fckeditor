@@ -55,6 +55,15 @@ Option names are case sentitive and must be written as indicated in the offical 
 
 For a full reference of the available options please refer to the [offical documentation|http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options]
 
+
+****************************
+Spiegazione con esempi di alcune configurazioni
+Stili
+Templates
+etc.
+****************************
+
+
 h4. Tag editor
 
 This tag render the wysiwyg editor
@@ -89,7 +98,7 @@ All invalid characters will be replaced by "".
 
 h4. Tag fileBrowser
 
-Create a link to open the file browser
+Render a link to open a stand alone file browser not associated with an editor instance
 
 {code:html}
 <fckeditor:fileBrowser browser="default">Open file browser</fckeditor:fileBrowser>
@@ -108,7 +117,7 @@ Attribute | Description
 if you just need the link to the file browser there is a *fileBrowserLink* tag:
 
 {code:html}
-<a href="${g.fileBrowserLink(type:'Image', browser:'extended')}">Open file browser</a>
+<a href="${g.fileBrowserLink(type:'Image', browser:'extended', userSpace:'userone')}">Open file browser</a>
 {code}
 
 h2. Configuration
@@ -152,9 +161,10 @@ fckeditor {
 			browser = true
 			upload = false
 			allowed = []
-			denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5', 'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
- 'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
-'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
+			denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5',
+			          'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
+                      'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
+                      'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
 		}
 		image {
 			browser = true
@@ -182,6 +192,15 @@ fckeditor {
 *Security note*
 
 For security reasons is important to define allowed/denied extensions.
+{note}
+
+h2. Issues
+
+The plugin is developed and tested with Grails 1.1
+
+{note}
+Due to a bug in Grails 1.0.4 and Grails 1.0.5-SNAPSHOT upload will not work with those versions.
+Please see here for more details ***LINK TO JIRA BUG***
 {note}
 
 h2. Version history
@@ -214,8 +233,8 @@ h4. 0.5
 
 * First public release
 
-h2. Comments and bugs
+h2. Development
 
-Please send any comment or suggestion to the author at stefano DOT gualdi AT gmail DOT com
+Author: Stefano Gualdi (stefano DOT gualdi AT gmail DOT com)
 
-Issues or improvements can be signaled via JIRA ADDRESS ADDRESS
+For issues, improvements or new features go to the plugin's [JIRA page|http://jira.codehaus.org/browse/GRAILSPLUGINS/component/12966]
