@@ -1,6 +1,7 @@
 package org.gualdi.grails.plugins.fckeditor
 
 import org.gualdi.grails.utils.BrowserDetector
+import org.gualdi.grails.utils.PathUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
@@ -72,7 +73,7 @@ class Fckeditor {
 		// Base configuration
 		instanceName = attrs.name ? attrs.remove('name') : DEFAULT_INSTANCENAME
 		fileBrowser = attrs.fileBrowser ? attrs.remove('fileBrowser') : DEFAULT_FILEBROWSER
-		userSpace = attrs.userSpace ? attrs.remove('userSpace') : DEFAULT_USERSPACE
+		userSpace = attrs.userSpace ? PathUtils.sanitizePath(attrs.remove('userSpace')) : DEFAULT_USERSPACE
         toolbar = attrs.toolbar ? attrs.remove('toolbar') : DEFAULT_TOOLBAR
 		width = attrs.width ? attrs.remove('width') : DEFAULT_WIDTH
 		height = attrs.height ? attrs.remove('height') : DEFAULT_HEIGHT
@@ -89,7 +90,7 @@ class Fckeditor {
 			if ( type != 'Link') {
 				typeStr = "Type=${type}&"
 			}
-            def value = "${basePath}/js/fckeditor/editor/filemanager/browser/${fileBrowser}/browser.html?${typeStr}Connector=${contextPath}/fckconnector?userSpace=${userSpace}"
+            def value = "${basePath}/js/fckeditor/editor/filemanager/browser/${fileBrowser}/browser.html?${typeStr}Connector=${contextPath}/fckconnector${userSpace ? '?userSpace='+ userSpace : ''}"
 			tempConfig[key] = value
 
 			// File Browser is enabled?
@@ -100,7 +101,7 @@ class Fckeditor {
 
 		resources.each { type ->
 			def key = "${type}UploadURL"
-			def value = "${contextPath}/fckuploader?Type=${type == 'Link' ? 'File' : type}&userSpace=${userSpace}"
+			def value = "${contextPath}/fckuploader?Type=${type == 'Link' ? 'File' : type}${userSpace ? '&userSpace='+ userSpace : ''}"
 			tempConfig[key] = value
 
 			// Upload tab is enabled?
@@ -163,7 +164,7 @@ class Fckeditor {
         if ( type != 'Link') {
             typeStr = "Type=${type}&"
         }
-        def html = "${this.basePath}/js/fckeditor/editor/filemanager/browser/${browser}/browser.html?${typeStr}Connector=${this.contextPath}/fckconnector?userSpace=${userSpace}"
+        def html = "${this.basePath}/js/fckeditor/editor/filemanager/browser/${browser}/browser.html?${typeStr}Connector=${this.contextPath}/fckconnector${userSpace ? '?userSpace='+ userSpace : ''}"
         return html
     }
 

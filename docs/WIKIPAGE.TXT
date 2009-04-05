@@ -8,7 +8,7 @@ The FCKeditor plugin is based on the great FCKeditor [http://www.fckeditor.net] 
 
 h2. Current version
 
-Current plugin version is *0.9*
+Current version is *0.9*
 
 Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.4*
 
@@ -30,6 +30,8 @@ Tag | Description
 *editor* | Render the wysiwyg editor
 *fileBrowser* | Create a link to open just the file browser
 {table}
+
+all the tags belongs to the namespace *fckeditor*
 
 h4. Tag config
 
@@ -111,13 +113,13 @@ Attribute | Description
 *type* | Type of resource (default: "")
 *browser* | Name of the file browser to use. Possible values are default or extended. The extended file browser supports deletion and rename of files and folders (default: "default")
 *userSpace* | Name of the file user space to use for file browsing and uploads (default: "")
-*target* | Target attribute for the generated A tag (default: "")
+*target* | Target attribute for the generated <A> tag (default: "")
 {table}
 
 if you just need the link to the file browser there is a *fileBrowserLink* tag:
 
 {code:html}
-<a href="${g.fileBrowserLink(type:'Image', browser:'extended', userSpace:'userone')}">Open file browser</a>
+<a href="${fckeditor.fileBrowserLink(type:'Image', browser:'extended', userSpace:'userone')}">Open file browser</a>
 {code}
 
 h2. Configuration

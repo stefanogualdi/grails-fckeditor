@@ -14,8 +14,8 @@ static class PathUtils {
     static sanitizePath(path) {
         def result = ""
         if (path) {
-	        // remove the following chars: . \ / | : ? * " < > 'control chars'
-            result = path.replaceAll("\\.|\\/|\\/|\\||:|\\?|\\*|\"|<|>|\\p{Cntrl}", "")
+	        // remove: . \ / | : ? * " ' ` ~ < > {space}
+            result = path.replaceAll(/\.|\/|\\|\||:|\?|\*|"|'|~|`|<|>| /, "")
         }
         return result
     }
