@@ -1,6 +1,18 @@
+package org.gualdi.grails.plugins.fckeditor
+
 import org.gualdi.grails.utils.PathUtils
 
-class PathUtilsTests extends GroovyTestCase {
+import grails.test.*
+
+class PathUtilsTests extends GrailsUnitTestCase {
+
+    protected void setUp() {
+        super.setUp()
+    }
+
+    protected void tearDown() {
+        super.tearDown()
+    }
 
     void testPathSanitization() {
         def path = ".\\/|:?*\"<>'`~finalpath-one.\\/|:?*\"<>'`~"
