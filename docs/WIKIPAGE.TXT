@@ -95,7 +95,7 @@ Attribute | Description
 
 {note}
 For security reasons the *userSpace* attribute cannot contain any special character.
-All invalid characters will be replaced by "".
+Any invalid character will be removed.
 {note}
 
 h4. Tag fileBrowser
@@ -201,13 +201,13 @@ h2. Issues
 The plugin is developed and tested with Grails 1.1
 
 {note}
-Due to a bug in Grails 1.0.4 and Grails 1.0.5-SNAPSHOT upload will not work with those versions.
+Due to a bug in Grails 1.0.4 and upload will not work with this version.
 Please see here for more details ***LINK TO JIRA BUG***
 {note}
 
 h2. Version history
 
-h4. 0.9 (xx/02/2009)
+h4. 0.9 (6/04/2009)
 
 * Upgrade to FCKeditor version 2.6.4 final
 * Added the config tag
@@ -236,7 +236,5 @@ h4. 0.5
 * First public release
 
 h2. Development
-
-Author: Stefano Gualdi (stefano DOT gualdi AT gmail DOT com)
 
 For issues, improvements or new features go to the plugin's [JIRA page|http://jira.codehaus.org/browse/GRAILSPLUGINS/component/12966]
