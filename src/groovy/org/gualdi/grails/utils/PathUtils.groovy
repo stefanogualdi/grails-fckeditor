@@ -5,7 +5,7 @@ package org.gualdi.grails.utils
  * Created: 21-Feb-2009
  */
 
-static class PathUtils {
+class PathUtils {
     static splitFilename(fileName) {
     	def idx = fileName.lastIndexOf(".")
     	return  [name: fileName[0..idx - 1], ext: fileName[idx + 1..-1]]

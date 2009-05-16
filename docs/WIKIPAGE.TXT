@@ -1,3 +1,8 @@
+{note}
+Not yet released
+{note}
+
+
 h1. FCKeditor Plugin
 
 This plugin can be used to integrate rich web editing functionality in Grails applications.
@@ -11,6 +16,8 @@ h2. Current version
 Current version is *0.9*
 
 Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.4*
+
+This version is developed and tested with Grails 1.1
 
 h2. Installation
 
@@ -56,15 +63,6 @@ Many options can be set in one time:
 Option names are case sentitive and must be written as indicated in the offical documentation.
 
 For a full reference of the available options please refer to the [offical documentation|http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options]
-
-
-****************************
-Spiegazione con esempi di alcune configurazioni
-Stili
-Templates
-etc.
-****************************
-
 
 h4. Tag editor
 
@@ -193,21 +191,12 @@ fckeditor {
 {note}
 *Security note*
 
-For security reasons is important to define allowed/denied extensions.
-{note}
-
-h2. Issues
-
-The plugin is developed and tested with Grails 1.1
-
-{note}
-Due to a bug in Grails 1.0.4 and upload will not work with this version.
-Please see here for more details ***LINK TO JIRA BUG***
+For security reasons it is important to define allowed/denied extensions.
 {note}
 
 h2. Version history
 
-h4. 0.9 (6/04/2009)
+h4. 0.9 (??/04/2009)
 
 * Upgrade to FCKeditor version 2.6.4 final
 * Added the config tag
