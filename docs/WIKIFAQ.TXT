@@ -1,0 +1,9 @@
+h4. How can I add my own configurations?
+
+You can use the config tag to point an alternative configuration file:
+
+{code}
+<fckeditor:config CustomConfigurationsPath="${g.createLinkTo(dir:'js/fckeditor', file: 'fckcustom.js')}"/>
+{code}
+
+then create a new file under web-app/js/fckeditor named fckcustom.js (or whatever you want) and include the configurations you want to change.

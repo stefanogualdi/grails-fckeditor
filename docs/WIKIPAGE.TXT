@@ -1,8 +1,3 @@
-{note}
-Not yet released
-{note}
-
-
 h1. FCKeditor Plugin
 
 This plugin can be used to integrate rich web editing functionality in Grails applications.
@@ -13,19 +8,11 @@ The FCKeditor plugin is based on the great FCKeditor [http://www.fckeditor.net] 
 
 h2. Current version
 
-Current version is *0.9*
+Current version is *0.9.2*
 
 Based on FCKeditor ([http://www.fckeditor.net]) version *2.6.4*
 
-This version is developed and tested with Grails 1.1
-
-h2. Installation
-
-The plugin can be installed with the following command:
-
-{code}
-grails install-plugin fckeditor
-{code}
+This version is developed and tested with Grails 1.1.1
 
 h2. Tags reference
 
@@ -60,9 +47,9 @@ Many options can be set in one time:
     OptionTwo="option_two_value" />
 {code}
 
-Option names are case sentitive and must be written as indicated in the offical documentation.
+Option names are case sentitive and must be written as indicated in the official documentation.
 
-For a full reference of the available options please refer to the [offical documentation|http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options]
+For a full reference of the available options please refer to the [official documentation|http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options]
 
 h4. Tag editor
 
@@ -128,6 +115,7 @@ Actually are available the following options:
 
 {table}
 Config key|Default|Description
+*fckeditor.skipBrowserCheck*|false|Skip browser detection. Always render the extented editor
 *fckeditor.upload.basedir*|/uploads/|Base directory relative to webapp root if baseurl not defined, otherwise the absolute path where to store the uploaded files
 *fckeditor.upload.baseurl*|none|The base URL to access the uploaded files
 *fckeditor.upload.overwrite*|false|Overwite files on upload
@@ -153,38 +141,38 @@ h2. Sample config
 
 {code}
 fckeditor {
-	upload {
-		basedir = "/tmp/storagearea/"
-		baseurl = "/uploads/"
-		overwrite = false
-		link {
-			browser = true
-			upload = false
-			allowed = []
-			denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5',
-			          'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
+    upload {
+        basedir = "/tmp/storagearea/"
+        baseurl = "/uploads/"
+        overwrite = false
+        link {
+            browser = true
+            upload = false
+            allowed = []
+            denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5',
+                      'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
                       'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
                       'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
-		}
-		image {
-			browser = true
-			upload = true
-			allowed = ['jpg', 'gif', 'jpeg', 'png']
-			denied = []
-		}
-		flash {
-			browser = false
-			upload = false
-			allowed = ['swf']
-			denied = []
-		}
-		media {
-			browser = false
-			upload = false
-			allowed = ['mpg','mpeg','avi','wmv','asf','mov']
-			denied = []
-		}
-	}
+        }
+        image {
+            browser = true
+            upload = true
+            allowed = ['jpg', 'gif', 'jpeg', 'png']
+            denied = []
+        }
+        flash {
+            browser = false
+            upload = false
+            allowed = ['swf']
+            denied = []
+        }
+        media {
+            browser = false
+            upload = false
+            allowed = ['mpg','mpeg','avi','wmv','asf','mov']
+            denied = []
+        }
+    }
 }
 {code}
 
@@ -196,7 +184,17 @@ For security reasons it is important to define allowed/denied extensions.
 
 h2. Version history
 
-h4. 0.9 (??/04/2009)
+h4. 0.9.2 (21/05/2009)
+
+* Added Iceweasel to browser detection code (thanks to Sergej Dechand for notifying)
+* Added new configuration flag skipBrowserCheck
+
+h4. 0.9.1 (16/05/2009)
+
+* Corrected typo
+* Upgrade to Grails 1.1.1
+
+h4. 0.9 (15/04/2009)
 
 * Upgrade to FCKeditor version 2.6.4 final
 * Added the config tag
