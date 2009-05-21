@@ -1,5 +1,5 @@
 class FckeditorGrailsPlugin {
-    def version = '0.9.1'
+    def version = '0.9.2'
     def dependsOn = [:]
 	
     def author = "Stefano Gualdi"

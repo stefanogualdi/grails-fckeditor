@@ -14,10 +14,12 @@ class BrowserDetector {
     public static final NETSCAPE = 'netscape'
     public static final MOZILLA = 'mozilla'
     public static final CHROME = 'chrome'
+    public static final ICEWEASEL = 'iceweasel'
 
 	// NB: Order of the items is important
 	public static final DETECT_STRINGS = [
         [browserId:'chrome', versionId:'chrome', browserName: CHROME],
+        [browserId:'iceweasel', versionId:'iceweasel', browserName: ICEWEASEL],
         [browserId:'safari', versionId:'version', browserName: SAFARI],
         [browserId:'camino', versionId:'camino', browserName: CAMINO],
         [browserId:'opera', versionId:'opera', browserName: OPERA],

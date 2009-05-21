@@ -19,9 +19,9 @@
       <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
     </content>
-    <orderEntry type="library" name="grails-1.1" level="application" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="grails-1.1.1" level="application" />
     <orderEntry type="module-library">
       <library name="Grails User Library">
         <CLASSES>
@@ -32,7 +32,6 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="GRAILS" level="application" />
   </component>
 </module>
 

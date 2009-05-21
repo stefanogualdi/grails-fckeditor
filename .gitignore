@@ -4,7 +4,8 @@ out
 test/reports
 docs/api
 docs/gapi
-webapp/plugins
+web-app/WEB-INF
+web-app/plugins
 *.zip
 *.iws
 .settings

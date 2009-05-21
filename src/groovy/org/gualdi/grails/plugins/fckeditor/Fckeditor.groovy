@@ -46,7 +46,8 @@ class Fckeditor {
 	                                    (BrowserDetector.OPERA): 9.5,
 	                                    (BrowserDetector.NETSCAPE): 7.1,
 	                                    (BrowserDetector.CAMINO): 1.0,
-                                        (BrowserDetector.CHROME): 0.2
+                                        (BrowserDetector.CHROME): 0.2,
+                                        (BrowserDetector.ICEWEASEL): 2.0
 	                                    ]
 	
 	def contextPath
@@ -134,6 +135,8 @@ class Fckeditor {
 	}
 
 	def createEditor() {
+        def skipBrowserCheck = ConfigurationHolder.config.fckeditor.skipBrowserCheck ?: false
+
 		def compatibleHtml = """
 		<div>
 			<input type="hidden" id="${instanceName}" name="${instanceName}" value="${initialValue.encodeAsHTML()}"/>
@@ -152,7 +155,7 @@ class Fckeditor {
 		def bd = new BrowserDetector(userAgent)
 		
 		def result = standardHtml
-		if (bd.isCompatible(COMPATIBLE_BROWSERS)) {
+		if (skipBrowserCheck || bd.isCompatible(COMPATIBLE_BROWSERS)) {
 			result = compatibleHtml
 		}
 

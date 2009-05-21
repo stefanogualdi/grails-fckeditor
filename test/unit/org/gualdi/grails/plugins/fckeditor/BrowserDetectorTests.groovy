@@ -15,6 +15,7 @@ class BrowserDetectorTests extends GrailsUnitTestCase {
     }
 
     void testDetection() {
+        // See: http://www.useragentstring.com/pages/useragentstring.php
         def uas = [[BrowserDetector.SAFARI,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-gb) AppleWebKit/523.10.6 (KHTML, like Gecko) Version/3.0.4 Safari/523.10.6',3.0],
                    [BrowserDetector.CAMINO,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.6) Gecko/20070809 Camino/1.5.1',1.5],
                    [BrowserDetector.CAMINO,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.0.1) Gecko/20060118 Camino/1.0b2+',1.0],
@@ -36,7 +37,12 @@ class BrowserDetectorTests extends GrailsUnitTestCase {
                    [BrowserDetector.NETSCAPE, 'Mozilla/5.0 (Windows; U; WinNT4.0; en-CA; rv:0.9.4) Gecko/20011128 Netscape6/6.2.1',6.2],
                    [BrowserDetector.FIREFOX,'Mozilla/5.0 (X11; U; Darwin Power Macintosh; en-US; rv:1.8.0.12) Gecko/20070803 Firefox/1.AA.0.12 Fink Community Edition',0.0],
                    [BrowserDetector.CHROME,'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.29 Safari/525.13',0.2],
-                   ]
+                   [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1) Gecko/20061024 Iceweasel/2.0 (Debian-2.0+dfsg-1)',2.0],
+                   [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.0.7) Gecko/20061022 Iceweasel/1.5.0.7-g2',1.5],
+                   [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1b3pre) Gecko/20090207 Ubuntu/9.04 (jaunty) IceWeasel/3.1b3pre',3.1],
+                   [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-GB; rv:1.9.0.7) Gecko/2009030814 Iceweasel/3.0.9 (Debian-3.0.9-1)',3.0],
+                   [BrowserDetector.FIREFOX,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; fr; rv:1.9.1b4) Gecko/20090423 Firefox/3.5b4',3.5]
+        ]
 
 	uas.each { itm ->
             def bd = new BrowserDetector(itm[1])
