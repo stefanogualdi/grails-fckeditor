@@ -4,11 +4,15 @@ import org.gualdi.grails.utils.BrowserDetector
 import org.gualdi.grails.utils.PathUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.codehaus.groovy.grails.plugins.PluginManagerHolder
+import org.codehaus.groovy.grails.web.taglib.GroovyPageTagBody
+import org.apache.log4j.Logger
 
 /**
 * @author Stefano Gualdi
 */
 class Fckeditor {
+    private final Logger log = Logger.getLogger(getClass())
+    
 	static final DEFAULT_BASEDIR = "/uploads/"
 	static final DEFAULT_FILEBROWSER = "default"
 	static final DEFAULT_USERSPACE = ""
@@ -58,7 +62,7 @@ class Fckeditor {
 	def toolbar
 	def width
 	def height
-	def initialValue = ""
+	def initialValue // = ""
 
 	def configField
 
@@ -133,33 +137,90 @@ class Fckeditor {
 
 		configField = tempConfig.collect { key, value -> "${key}=${encodeConfig(value)}" }.join('&')
 	}
-
-	def createEditor() {
+    
+    def renderEditor(out) {
         def skipBrowserCheck = ConfigurationHolder.config.fckeditor.skipBrowserCheck ?: false
 
-		def compatibleHtml = """
-		<div>
-			<input type="hidden" id="${instanceName}" name="${instanceName}" value="${initialValue.encodeAsHTML()}"/>
-			<input type="hidden" id="${instanceName}___Config" value="${configField}"/>
-			<iframe id="${instanceName}___Frame" src="${basePath}/js/fckeditor/editor/fckeditor.html?InstanceName=${instanceName}&Toolbar=${toolbar}" width="${width}" height="${height}" frameborder="no" scrolling="no"></iframe>
-		</div>
-		"""
-
-		def standardHtml = """
-		<div>
-			<textarea name="${instanceName}" rows="4" cols="40" style="width: 100%; height: 200px; wrap="virtual">${initialValue.encodeAsHTML()}</textarea>
-		</div>
-		"""
-		
 		def userAgent = request.getHeader("user-agent")
 		def bd = new BrowserDetector(userAgent)
-		
-		def result = standardHtml
-		if (skipBrowserCheck || bd.isCompatible(COMPATIBLE_BROWSERS)) {
-			result = compatibleHtml
-		}
 
-		return result
+		if (skipBrowserCheck || bd.isCompatible(COMPATIBLE_BROWSERS)) {
+    		out << "<div><input type=\"hidden\" id=\"${instanceName}\" name=\"${instanceName}\" value=\""
+    		if (!(initialValue instanceof String)) {
+
+                if (initialValue instanceof GroovyPageTagBody) {
+                    log.debug "IS GroovyPageTagBody"
+                    out << initialValue()?.encodeAsHTML()
+                }
+                else {
+                    log.debug "IS GroovyPage"
+                    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
+                }
+    		}
+            else {
+                log.debug "IS String"
+    		    out << initialValue.encodeAsHTML()
+    		}
+    		out << """
+    		"><input type="hidden" id="${instanceName}___Config" value="${configField}"/>
+    			<iframe id="${instanceName}___Frame" src="${basePath}/js/fckeditor/editor/fckeditor.html?InstanceName=${instanceName}&Toolbar=${toolbar}" width="${width}" height="${height}" frameborder="no" scrolling="no"></iframe>
+    		</div>
+    		"""
+    	}
+        else {
+            out << """
+    		<div>
+    			<textarea name="${instanceName}" rows="4" cols="40" style="width: 100%; height: 200px; wrap="virtual">
+    	    """
+    		if (!(initialValue instanceof String)) {
+                if (initialValue instanceof GroovyPageTagBody) {
+                    out << initialValue()
+                }
+                else {
+                    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
+                }
+    		}
+            else {
+    		    out << initialValue.encodeAsHTML()
+    		}
+    		out << """</textarea>
+    		    </div>
+		    """
+		}
+	}
+
+    def renderEditorMark(out) {
+        def skipBrowserCheck = ConfigurationHolder.config.fckeditor.skipBrowserCheck ?: false
+
+		def userAgent = request.getHeader("user-agent")
+		def bd = new BrowserDetector(userAgent)
+
+		if (skipBrowserCheck || bd.isCompatible(COMPATIBLE_BROWSERS)) {
+    		out << "<div><input type=\"hidden\" id=\"${instanceName}\" name=\"${instanceName}\" value=\""
+    		if (!(initialValue instanceof String)) {
+    		    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
+    		} else {
+    		    out << initialValue.encodeAsHTML()
+    		}
+    		out << """
+    		"><input type="hidden" id="${instanceName}___Config" value="${configField}"/>
+    			<iframe id="${instanceName}___Frame" src="${basePath}/js/fckeditor/editor/fckeditor.html?InstanceName=${instanceName}&Toolbar=${toolbar}" width="${width}" height="${height}" frameborder="no" scrolling="no"></iframe>
+    		</div>
+    		"""
+    	} else {
+            out << """
+    		<div>
+    			<textarea name="${instanceName}" rows="4" cols="40" style="width: 100%; height: 200px; wrap="virtual">
+    	    """
+    		if (!(initialValue instanceof String)) {
+    		    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
+    		} else {
+    		    out << initialValue.encodeAsHTML()
+    		}
+    		out << """</textarea>
+    		    </div>
+		    """
+		}
 	}
 
     def createFileBrowser(type, browser) {

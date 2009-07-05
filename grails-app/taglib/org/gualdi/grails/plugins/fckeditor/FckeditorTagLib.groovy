@@ -18,9 +18,9 @@ class FckeditorTagLib {
 
 	def editor = { attrs, body ->
 		def editor = new Fckeditor(request, attrs)
-		editor.initialValue = body()
+		editor.initialValue = body
 
-		out << editor.createEditor()
+        editor.renderEditor(out)
 	}
 
     def fileBrowser = { attrs, body ->
