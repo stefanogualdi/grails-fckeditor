@@ -41,7 +41,10 @@ class BrowserDetectorTests extends GrailsUnitTestCase {
                    [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.0.7) Gecko/20061022 Iceweasel/1.5.0.7-g2',1.5],
                    [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1b3pre) Gecko/20090207 Ubuntu/9.04 (jaunty) IceWeasel/3.1b3pre',3.1],
                    [BrowserDetector.ICEWEASEL,'Mozilla/5.0 (X11; U; Linux i686; en-GB; rv:1.9.0.7) Gecko/2009030814 Iceweasel/3.0.9 (Debian-3.0.9-1)',3.0],
-                   [BrowserDetector.FIREFOX,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; fr; rv:1.9.1b4) Gecko/20090423 Firefox/3.5b4',3.5]
+                   [BrowserDetector.FIREFOX,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; fr; rv:1.9.1b4) Gecko/20090423 Firefox/3.5b4',3.5],
+                   [BrowserDetector.FIREFOX,'Mozilla/5.0 (X11; U; Linux i686; en-us; rv:1.9.0.2) Gecko/2008092313 Ubuntu/9.04 (jaunty) Firefox/3.5',3.5],
+                   [BrowserDetector.FIREFOX,'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; rv:1.9.1) Gecko/20090624 Firefox/3.5',3.5]
+
         ]
 
 	uas.each { itm ->
