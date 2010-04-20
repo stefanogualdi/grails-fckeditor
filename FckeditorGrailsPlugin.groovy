@@ -7,7 +7,7 @@ class FckeditorGrailsPlugin {
     def authorEmail = "stefano.gualdi@gmail.com"
     def title = "Grails plugin for using FCKeditor rich editing features in a Grails application"
     def description = 'Grails plugin for using FCKeditor rich editing features in a Grails application'
-    def documentation = "http://grails.org/FCKeditor+plugin"
+    def documentation = "http://grails.org/plugin/fckeditor"
 	
     def doWithSpring = {
     }
