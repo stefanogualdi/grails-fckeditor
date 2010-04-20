@@ -189,40 +189,6 @@ class Fckeditor {
 		}
 	}
 
-    def renderEditorMark(out) {
-        def skipBrowserCheck = ConfigurationHolder.config.fckeditor.skipBrowserCheck ?: false
-
-		def userAgent = request.getHeader("user-agent")
-		def bd = new BrowserDetector(userAgent)
-
-		if (skipBrowserCheck || bd.isCompatible(COMPATIBLE_BROWSERS)) {
-    		out << "<div><input type=\"hidden\" id=\"${instanceName}\" name=\"${instanceName}\" value=\""
-    		if (!(initialValue instanceof String)) {
-    		    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
-    		} else {
-    		    out << initialValue.encodeAsHTML()
-    		}
-    		out << """
-    		"><input type="hidden" id="${instanceName}___Config" value="${configField}"/>
-    			<iframe id="${instanceName}___Frame" src="${basePath}/js/fckeditor/editor/fckeditor.html?InstanceName=${instanceName}&Toolbar=${toolbar}" width="${width}" height="${height}" frameborder="no" scrolling="no"></iframe>
-    		</div>
-    		"""
-    	} else {
-            out << """
-    		<div>
-    			<textarea name="${instanceName}" rows="4" cols="40" style="width: 100%; height: 200px; wrap="virtual">
-    	    """
-    		if (!(initialValue instanceof String)) {
-    		    initialValue() // Grails 1.1.x bugs write out immediately without encodeAsHTML support
-    		} else {
-    		    out << initialValue.encodeAsHTML()
-    		}
-    		out << """</textarea>
-    		    </div>
-		    """
-		}
-	}
-
     def createFileBrowser(type, browser) {
         def typeStr = ""
         if ( type != 'Link') {
@@ -232,8 +198,8 @@ class Fckeditor {
         return html
     }
 
-	private String encodeConfig(String txt) {
-		def result = txt
+	private String encodeConfig(txt) {
+		def result = txt.toString()
 		for (r in PARAMS_CONFIG_MAPPING ) {
 			result = result.replaceAll(r[0], r[1])
 		}
